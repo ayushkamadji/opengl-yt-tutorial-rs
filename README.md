@@ -1,10 +1,10 @@
-## OpenGL Youtube Tutorial Codealong in Rust
+# OpenGL Youtube Tutorial Codealong in Rust
 
 This is a codealong for [The Cherno - OpenGL](https://youtube.com/playlist?list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2) youtube series adapted for Rust.
 
-### Progress
+## Progress
 
-#### Lessons 1 - 3
+### Lessons 1 - 3
 
 This is mostly setup and the details and is drastically different between C++ and Rust. But the general steps are the same. Namely to install gl frameworks (I will be using gl-rs + glfw-rs crates). In rust we need to install these crates (see Cargo.toml).
 
@@ -14,3 +14,12 @@ I am on windows and the one that worked for me was to install [CMake](https://cm
 See also [learn-opengl-rs](https://github.com/bwasty/learn-opengl-rs)
 
 One more note `gl-rs` doesn't seem to support glBegin() glEnd() legacy style (cmiiw) so we won't be able to draw triangle with those commands at this point of the lesson.
+
+---
+
+### Lessons 4 - 7
+
+TODO:
+
+- [x] Working code
+- [ ] Update readme

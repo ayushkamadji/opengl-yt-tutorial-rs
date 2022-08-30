@@ -1,103 +1,17 @@
 extern crate glfw;
 
 use gl::types::*;
-
+use opengl_yt_tutorial_rs::utils;
 use self::glfw::{Context, Key, Action};
 
 extern crate gl;
 
-use std::ffi::CString;
 use std::mem;
 use std::ptr;
-use std::str;
 
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-
-// Shader sources
-static VS_SRC: &'static str = "
-#version 330
-in vec2 position;
-void main() {
-    gl_Position = vec4(position, 0.0, 1.0);
-}";
-
-static FS_SRC: &'static str = "
-#version 330
-out vec4 out_color;
-void main() {
-    out_color = vec4(1.0, 1.0, 1.0, 1.0);
-}";
-
-fn compile_shader(type_: GLenum, source: &str) -> GLuint {
-    let shader: u32;
-    unsafe {
-        shader = gl::CreateShader(type_);
-        let c_str = CString::new(source.as_bytes()).unwrap();
-        gl::ShaderSource(shader, 1, &c_str.as_ptr(), ptr::null());
-        gl::CompileShader(shader);
-
-        // Get the compile status
-        let mut status = gl::FALSE as GLint;
-        gl::GetShaderiv(shader, gl::COMPILE_STATUS, &mut status);
-
-        // Fail on error
-        if status != (gl::TRUE as GLint) {
-            let mut len = 0;
-            gl::GetShaderiv(shader, gl::INFO_LOG_LENGTH, &mut len);
-            let mut buf = Vec::with_capacity(len as usize);
-            buf.set_len(len as usize); // subtract 1 to skip the trailing null character
-            gl::GetShaderInfoLog(
-                shader,
-                len,
-                ptr::null_mut(),
-                buf.as_mut_ptr() as *mut GLchar,
-            );
-            let bufstr = str::from_utf8(&buf).expect("ShaderInfoLog not valid utf8");
-            panic!(
-                "{}",
-                bufstr
-            );
-        }
-    }
-    shader
-}
-
-fn link_program(vs: u32, fs: u32) -> GLuint {
-    let program;
-    unsafe {
-        program = gl::CreateProgram();
-        gl::AttachShader(program, vs);
-        gl::AttachShader(program, fs);
-        gl::LinkProgram(program);
-        
-        // Get the link status
-        let mut status = gl::FALSE as GLint;
-        gl::GetProgramiv(program, gl::LINK_STATUS, &mut status);
-
-        // Fail on error
-        if status != (gl::TRUE as GLint) {
-            let mut len: GLint = 0;
-            gl::GetProgramiv(program, gl::INFO_LOG_LENGTH, &mut len);
-            let mut buf = Vec::with_capacity(len as usize);
-            buf.set_len(len as usize); // subtract 1 to skip the trailing null character
-            gl::GetProgramInfoLog(
-                program,
-                len,
-                ptr::null_mut(),
-                buf.as_mut_ptr() as *mut GLchar,
-            );
-            panic!(
-                "{}",
-                str::from_utf8(&buf)
-                    .ok()
-                    .expect("ProgramInfoLog not valid utf8")
-            );
-        }
-    }
-    program
-}
 
 fn main() {
     // glfw: initialize and configure
@@ -124,9 +38,10 @@ fn main() {
     unsafe {
 
         // Program
-        let vs = compile_shader(gl::VERTEX_SHADER, VS_SRC);
-        let fs = compile_shader(gl::FRAGMENT_SHADER, FS_SRC);
-        let program = link_program(vs, fs); 
+        let shaders = utils::parse_shader("./src/shader/Basic.shader");
+        let vs = utils::compile_shader(&shaders[0]);
+        let fs = utils::compile_shader(&shaders[1]);
+        let program = utils::link_program(vs, fs); 
 
         // Buffer
         let positions: [GLfloat; 6] = [

@@ -32,3 +32,11 @@ Everything is very close to the C++ version with the exception of needing to add
 Dealing with shaders. The basic principle is the same: to factor out the shader code, and load it with a function. I also decided to move around some code into util so the main is not too long.
 
 _Note: Also the package name is changed at this point_
+
+TODO:
+
+- [ ] Lesson 9 - Index Buffer
+- [ ] Lesson 10 - Debugging: Update README
+- [ ] Lesson 11 - Uniforms
+- [ ] Lesson 12 - Vertex Arrays
+- [ ] Lesson 13 - Abstracting VBO and IBO
